@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تمرین آزمون واحد | راننده اسنپ‌باکس</title><style>@page{size:A4;margin:16mm 16mm 15mm 16mm}*{box-sizing:border-box}body{font-family:"Noto Sans Arabic","DejaVu Sans",sans-serif;color:#19283e;margin:0;line-height:1.85;font-size:11.3px;background:#fff}main{max-width:850px;margin:auto;padding:28px 35px}h1{font-size:25px;color:#102b4b;margin:4px 0 6px}h2{font-size:17px;color:#153a5d;margin:23px 0 9px;border-bottom:1px solid #d5e1e9;padding-bottom:6px}h3{font-size:12.5px;color:#153a5d;margin:12px 0 5px}.eyebrow{color:#50738f;font-size:10px;font-weight:bold;letter-spacing:.3px}.lead{font-size:12px;color:#42576c}.meta{display:flex;gap:10px;flex-wrap:wrap;margin:13px 0 17px}.meta span{padding:4px 12px;background:#edf3f7;border-radius:30px;font-size:10px}.panel{background:#f4f8fb;border:1px solid #d9e5ee;border-right:4px solid #2683a6;border-radius:9px;padding:12px 16px;margin:13px 0}.note{background:#fff7e8;border-color:#efd8ae;border-right-color:#ca8b29}.grid{width:100%;border-collapse:collapse;margin:9px 0 14px}.grid th{background:#eaf2f7;color:#173653;text-align:right}.grid td,.grid th{border:1px solid #d7e1e8;padding:7px 10px;vertical-align:top}.grid td:first-child{white-space:nowrap;font-weight:600}ul,ol{padding-right:24px;margin:5px 0 12px}li{padding-right:2px}pre{direction:ltr;text-align:left;unicode-bidi:plaintext;background:#142236;color:#f0f5fc;padding:13px 16px;border-radius:8px;line-height:1.43;font:10.2px/1.43 "DejaVu Sans Mono",monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:9px 0 13px;tab-size:4}code{direction:ltr;unicode-bidi:isolate;font-family:"DejaVu Sans Mono",monospace;font-size:.94em}p{margin:6px 0 10px}.footer{margin-top:18px;padding-top:10px;border-top:1px solid #d7e1e8;color:#687f90;font-size:9px}.newpage{break-before:page;page-break-before:always}.avoid{break-inside:avoid;page-break-inside:avoid}.section-caption{font-size:10px;color:#678092}strong{font-weight:700}@media screen{body{background:#e9eef2}main{background:white;box-shadow:0 10px 45px #293a511b;margin:30px auto;border-radius:11px}}@media print{main{padding:0;max-width:none}h2{break-after:avoid}pre{break-inside:avoid} .newpage{break-before:page}}</style></head><body><main>
+<div class="eyebrow">برنامه‌نویسی پیشرفته · شی‌گرایی · آزمون واحد</div>
+<h1>تمرین کشف خطا با <span dir="ltr">Unit Testing</span></h1>
+<p class="lead">مطالعهٔ موردی: کلاس رانندهٔ اسنپ‌باکس <code>Driver</code></p>
+<h2>۱. صورت مسئله</h2>
+<p>کلاسی به نام <code>Driver</code> برای مدیریت رانندگان اسنپ‌باکس طراحی شده است. هر راننده دارای نام کاربری، موقعیت، اعتبار و وضعیت است. وضعیت اولیه <code>FREE</code> و اعتبار اولیه صفر است. هزینه سفارش از نوع <code>Decimal</code> است.</p>
+<table class="grid"><tr><th>بخش</th><th>رفتار مورد انتظار</th></tr>
+<tr><td><code>Driver(username, position)</code></td><td>نام کاربری باید رشتهٔ غیرخالی و فقط شامل حروف و ارقام باشد. موقعیت باید <code>tuple</code> شامل دقیقاً دو عدد صحیح باشد. برای نوع نامعتبر <code>TypeError</code> و برای مقدار نامعتبر <code>ValueError</code> ایجاد شود.</td></tr>
+<tr><td><code>assign_order(cost, destination)</code></td><td>هزینه باید <code>Decimal</code> مثبت و مقصد یک موقعیت معتبر باشد. اگر راننده مشغول است <code>RuntimeError</code> ایجاد شود؛ در غیر این صورت وضعیت <code>BUSY</code> و خروجی <code>True</code> باشد.</td></tr>
+<tr><td><code>deliver()</code></td><td>اگر سفارش فعال نیست <code>RuntimeError</code> ایجاد شود. در تحویل موفق، موقعیت به مقصد و وضعیت به <code>FREE</code> تغییر کند؛ ۸۰٪ هزینه به اعتبار راننده و ۲۰٪ به <code>Driver.company_credit</code> افزوده شود. زمان با <code>datetime.now()</code> ثبت و چهارتایی <code>(username, position, credit, delivery_time)</code> بازگردانده شود.</td></tr>
+</table>
+<p>دو ویژگی کلاسی <code>Driver.total_drivers</code> و <code>Driver.company_credit</code> نیز باید از طریق خود کلاس قابل دسترسی باشند. کلاس فقط سه متد اصلیِ سازنده، اختصاص سفارش و تحویل را دارد.</p>
+<div class="panel"><strong>مأموریت شما</strong><p>کد ارائه‌شده <strong>دقیقاً دو خطای منطقی عمدی</strong> دارد. بدون تغییر دادن کلاس، تست‌هایی با کتابخانه <code>unittest</code> بنویسید که رفتار نادرست را آشکار کنند. معیار درستی، <strong>صورت مسئله</strong> است، نه خروجی فعلی برنامه.</p></div>
+<h2>۲. چه چیزی باید تحویل دهید؟</h2><ol><li>حداقل دو تست مستقل برای کشف دو خطا.</li><li>برای هر تست: رفتار مورد آزمایش، نتیجهٔ مورد انتظار و نتیجهٔ واقعی را توضیح دهید.</li><li>خروجی اجرای تست‌ها را ثبت کنید.</li><li>کد اصلی کلاس را تا پایان مرحلهٔ کشف خطا تغییر ندهید.</li></ol>
+<div class="panel note"><strong>یادآوری:</strong> تستی که صرفاً اجرا می‌شود اما هیچ <code>assert</code> ندارد، صحت رفتار برنامه را بررسی نمی‌کند. <code>FAIL</code> در این تمرین، اگر ناشی از کشف رفتار غلط باشد، نشانهٔ موفقیت تست شماست.</div>
+<div class="newpage"></div><h2>۳. پیاده‌سازی کلاس <code>Driver</code></h2>
+<pre>from datetime import datetime
+from decimal import Decimal
+
+class Driver:
+    total_drivers = 0
+    company_credit = Decimal(&#x27;0&#x27;)
+
+    def __init__(self, username, position):
+        if not isinstance(username, str):
+            raise TypeError(&#x27;Invalid username type&#x27;)
+        if not username or not username.isalnum():
+            raise ValueError(&#x27;Invalid username&#x27;)
+        if not isinstance(position, tuple):
+            raise TypeError(&#x27;Invalid position type&#x27;)
+        if len(position) != 2:
+            raise ValueError(&#x27;Invalid position&#x27;)
+        if not all(type(x) is int for x in position):
+            raise TypeError(&#x27;Invalid coordinates&#x27;)
+
+        self.username = username
+        self.position = position
+        self.credit = Decimal(&#x27;0&#x27;)
+        self.status = &#x27;FREE&#x27;
+        self.cost = None
+        self.destination = None
+        Driver.total_drivers += 1
+
+    def assign_order(self, cost, destination):
+        if self.status == &#x27;BUSY&#x27;:
+            raise RuntimeError(&#x27;Driver is busy&#x27;)
+        if not isinstance(cost, Decimal):
+            raise TypeError(&#x27;Invalid cost type&#x27;)
+        if cost &lt;= Decimal(&#x27;0&#x27;):
+            raise ValueError(&#x27;Cost must be positive&#x27;)
+        if not isinstance(destination, tuple):
+            raise TypeError(&#x27;Invalid destination type&#x27;)
+        if len(destination) != 2:
+            raise ValueError(&#x27;Invalid destination&#x27;)
+        if not all(type(x) is int for x in destination):
+            raise TypeError(&#x27;Invalid coordinates&#x27;)
+
+        self.cost = cost
+        self.destination = destination
+        self.status = &#x27;BUSY&#x27;
+        return True
+
+    def deliver(self):
+        if self.status != &#x27;BUSY&#x27;:
+            raise RuntimeError(&#x27;No active order&#x27;)
+
+        self.position = (self.destination[1], self.destination[0])
+        self.status = &#x27;FREE&#x27;
+        self.credit += self.cost * Decimal(&#x27;0.8&#x27;)
+        Driver.company_credit += self.cost * Decimal(&#x27;0.1&#x27;)
+        delivery_time = datetime.now()
+
+        return (self.username, self.position,
+                self.credit, delivery_time)</pre>
+<div class="newpage"></div><h2>۴. نوشتن تست با <code>unittest</code></h2>
+<p>در نمونهٔ زیر، یک تست کامل نوشته شده است. شما فقط بخش‌های <code>TODO</code> را تکمیل کنید؛ نام متدهای تست باید با <code>test_</code> شروع شود.</p>
+<pre>import unittest
+from decimal import Decimal
+
+class TestDriver(unittest.TestCase):
+
+    def setUp(self):
+        # Keep tests independent of each other.
+        Driver.total_drivers = 0
+        Driver.company_credit = Decimal(&#x27;0&#x27;)
+
+    def test_initial_state(self):
+        # A complete example of a unit test
+        driver = Driver(&#x27;Ali123&#x27;, (1, 2))
+        self.assertEqual(driver.status, &#x27;FREE&#x27;)
+        self.assertEqual(driver.credit, Decimal(&#x27;0&#x27;))
+
+    def test_behavior_1(self):
+        # TODO: Arrange - create the necessary objects
+        # TODO: Act - call the method to be tested
+        # TODO: Assert - compare actual and expected results
+        pass
+
+    def test_behavior_2(self):
+        # TODO: Complete a second independent scenario
+        pass
+
+    def test_boundary_or_error(self):
+        # TODO: Test one boundary or invalid situation
+        # Example syntax:
+        # with self.assertRaises(ValueError):
+        #     some_operation()
+        pass
+
+# In the course notebook, use the existing run_tests function:
+run_tests(TestDriver)
+
+# Or, in an independent .py file, replace the line above with:
+# if __name__ == &#x27;__main__&#x27;:
+#     unittest.main()</pre>
+<div class="panel avoid"><strong>دستورهای پرکاربرد</strong><p dir="ltr" style="text-align:left"><code>self.assertEqual(actual, expected)</code> — <code>self.assertTrue(condition)</code> — <code>self.assertFalse(condition)</code> — <code>with self.assertRaises(ValueError):</code></p><p>در هر تست ابتدا شرایط را بسازید (<code>Arrange</code>)، سپس عمل موردنظر را اجرا کنید (<code>Act</code>) و در پایان نتیجه را بررسی کنید (<code>Assert</code>).</p></div>
+<h2>۵. گزارش کوتاه نتایج</h2>
+<table class="grid"><tr><th>نام تست</th><th>رفتار مورد انتظار</th><th>نتیجه واقعی و دلیل شکست</th></tr><tr><td>۱. ....................</td><td>................................</td><td>................................</td></tr><tr><td>۲. ....................</td><td>................................</td><td>................................</td></tr></table>
+<div class="footer">تمرین آزمون واحد — راننده اسنپ‌باکس</div>
+</main></body></html>
