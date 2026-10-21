@@ -1,0 +1,321 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>پروژه شی‌گرای اسنپ‌باکس</title><style>
+@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font-family:Tahoma,"Vazirmatn","Noto Sans Arabic",Arial,sans-serif;direction:rtl;line-height:1.95;color:#1b2938;background:#f3f6fa;margin:0}main{max-width:1000px;margin:28px auto;padding:35px 48px;background:#fff;box-shadow:0 5px 35px #142c3e18;border-radius:12px}h1{color:#102e47;font-size:28px;margin-bottom:0}h2{color:#187187;font-size:21px}h3{color:#114864;font-size:17px;margin-top:26px;border-bottom:1px solid #dce6ea;padding-bottom:5px}h4{color:#144e64;font-size:15px}p,li{font-size:14px}strong{color:#0f4255}table{border-collapse:collapse;width:100%;font-size:12px;margin:16px 0;table-layout:auto}th,td{border:1px solid #d5e1e8;padding:8px 10px;text-align:right;vertical-align:top}thead{background:#e8f4f7}tr:nth-child(even){background:#fafcfd}pre{direction:ltr;text-align:left;background:#172737;color:#e7f3ff;padding:15px;border-radius:7px;overflow:auto;font-size:12.5px;line-height:1.65;unicode-bidi:isolate}code{direction:ltr;unicode-bidi:isolate;font-family:Consolas,"DejaVu Sans Mono",monospace;font-size:.9em}p code,li code,td code{background:#eef5f7;color:#134559;border-radius:3px;padding:1px 4px}a{color:#086d95}blockquote{border-right:4px solid #1293a7;padding:2px 16px;background:#f0f8fa}table,pre{break-inside:avoid}h3{break-after:avoid} @media print{body{background:white}main{box-shadow:none;margin:0;padding:0;max-width:none;border-radius:0}h1{font-size:23px}h2{font-size:19px}p,li{font-size:11.5px}table{font-size:10.5px}pre{font-size:10px}}
+</style></head><body><main><h1>پروژه نهایی برنامه‌نویسی پیشرفته</h1>
+<h2>طراحی سامانه مدیریت سفارش اسنپ‌باکس با OOP</h2>
+<p><strong>مبنای مسئله:</strong> <a href="https://quera.org/problemset/106799">تخصیص سفارش در کوئرا</a><br />
+<strong>شیوه تحویل:</strong> مخزن GitHub، تست خودکار، ارزیابی کد دیگران، قابلیت خلاقانه و دفاع حضوری</p>
+<h3>۱. هدف پروژه</h3>
+<p>سامانه‌ای برای ثبت راننده، ایجاد سفارش، تخصیص نزدیک‌ترین سفارش سازگار با نوع وسیله، پیگیری مراحل تحویل، محاسبه درآمد و ارائه گزارش طراحی کنید. هدف تنها اجرای برنامه نیست؛ ساختار کلاس‌ها، کپسوله‌سازی، رفتار قابل‌آزمون و درک کد نیز ارزیابی می‌شود.</p>
+<p>این متن <strong>قرارداد اجرایی یکسان پروژه</strong> است. منطق پایه از مسئله کوئرا الهام گرفته شده، اما کلاس‌های پایتونی، Propertyها، خروجی متدها و قواعد تست مشترک در این سند تعریف شده‌اند. در صورت تفاوت با جزئیات کوئرا، برای <strong>تست متقابل دانشجویان این سند ملاک است</strong>. رابط متنی <code>main.py</code> باید دستورات کوئرا را نیز پیاده‌سازی کند.</p>
+<h3>۲. قواعد داده و اصطلاحات</h3>
+<ul>
+<li>دسته وسیله: <code>BIKE</code>، <code>VAN</code> یا <code>TRUCK</code> (به حروف بزرگ).</li>
+<li>وضعیت راننده: <code>FREE</code> یا <code>BUSY</code>؛ وضعیت اولیه <code>FREE</code>.</li>
+<li>وضعیت سفارش: <code>PENDING</code>، <code>ARRIVED</code>، <code>PICKUP</code>، <code>DELIVERED</code>؛ وضعیت اولیه <code>PENDING</code>.</li>
+<li>مکان: <code>tuple</code> دقیقاً دو عدد صحیح <code>(x, y)</code>؛ مقادیر <code>bool</code> پذیرفته نمی‌شوند.</li>
+<li>نام کاربری: رشته غیرخالی از حروف انگلیسی و رقم، حداکثر ۲۵ کاراکتر، حساس به بزرگی/کوچکی حروف.</li>
+<li>هزینه و اعتبار: همیشه <code>Decimal</code> از <code>decimal</code>؛ مقدار ابتدایی <code>Decimal('0')</code>.</li>
+<li>فاصله Manhattan: <code>abs(x1-x2) + abs(y1-y2)</code>.</li>
+<li>هزینه سفارش: <code>Decimal(100) * Decimal(k + d)</code>؛ <code>d</code> فاصله مبدأ تا مقصد و <code>k</code> شمار سفارش‌های <code>PENDING</code> همان دسته با <strong>احتساب سفارش تازه</strong> است. هزینه پس از ثبت ثابت می‌ماند.</li>
+<li>انتخاب در فاصله برابر: ترتیب ثبت قدیمی‌تر اولویت دارد.</li>
+</ul>
+<h3>۳. طراحی کلاس‌ها و Propertyها</h3>
+<h4>۳.۱. <code>Driver</code></h4>
+<pre><code class="language-python">Driver(username: str, position: tuple, service_category: str)
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Property عمومی</th>
+  <th>نوع</th>
+  <th>مقدار اولیه / توضیح</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>username</code></td>
+  <td><code>str</code></td>
+  <td>نام کاربری</td>
+</tr>
+<tr>
+  <td><code>position</code></td>
+  <td><code>tuple</code></td>
+  <td>موقعیت فعلی</td>
+</tr>
+<tr>
+  <td><code>service_category</code></td>
+  <td><code>str</code></td>
+  <td>نوع وسیله</td>
+</tr>
+<tr>
+  <td><code>credit</code></td>
+  <td><code>Decimal</code></td>
+  <td><code>Decimal('0')</code></td>
+</tr>
+<tr>
+  <td><code>status</code></td>
+  <td><code>str</code></td>
+  <td><code>'FREE'</code></td>
+</tr>
+<tr>
+  <td><code>current_order</code></td>
+  <td><code>Order \| None</code></td>
+  <td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>همه Propertyها فقط خواندنی‌اند. کلاس <code>Driver</code> فقط اطلاعات همان راننده را مدیریت می‌کند و نیازی به شمارنده یا ویژگی کلاسی ندارد.</p>
+<pre><code class="language-python">is_available(self) -&gt; bool
+</code></pre>
+<p>فقط وقتی <code>status == 'FREE'</code> است، <code>True</code> برمی‌گرداند. سایر متدهای تغییر وضعیت می‌توانند در سطح داخلی تعریف شوند؛ اما نباید Setter عمومی برای این Propertyها ایجاد شود.</p>
+<h4>۳.۲. <code>Order</code></h4>
+<pre><code class="language-python">Order(order_id: int, service_category: str,
+      starting_position: tuple, finishing_position: tuple,
+      cost: Decimal)
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Property عمومی</th>
+  <th>نوع</th>
+  <th>مقدار اولیه / توضیح</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>order_id</code></td>
+  <td><code>int</code></td>
+  <td>شناسه مثبت</td>
+</tr>
+<tr>
+  <td><code>service_category</code></td>
+  <td><code>str</code></td>
+  <td>دسته وسیله</td>
+</tr>
+<tr>
+  <td><code>starting_position</code></td>
+  <td><code>tuple</code></td>
+  <td>مبدأ</td>
+</tr>
+<tr>
+  <td><code>finishing_position</code></td>
+  <td><code>tuple</code></td>
+  <td>مقصد</td>
+</tr>
+<tr>
+  <td><code>cost</code></td>
+  <td><code>Decimal</code></td>
+  <td>هزینه مثبت</td>
+</tr>
+<tr>
+  <td><code>status</code></td>
+  <td><code>str</code></td>
+  <td><code>'PENDING'</code></td>
+</tr>
+<tr>
+  <td><code>assigned_driver</code></td>
+  <td><code>Driver \| None</code></td>
+  <td><code>None</code></td>
+</tr>
+</tbody>
+</table>
+<p>تمام Propertyها فقط خواندنی‌اند. متد الزامی:</p>
+<pre><code class="language-python">is_pending(self) -&gt; bool
+</code></pre>
+<h4>۳.۳. <code>DeliverySystem</code></h4>
+<pre><code class="language-python">DeliverySystem()
+</code></pre>
+<p>سامانه در آغاز راننده و سفارش ندارد. هر نمونه اطلاعات و اعتبار مستقل دارد. دو Property فقط‌خواندنی <code>company_credit -&gt; Decimal</code> (مقدار اولیه صفر) و <code>total_drivers -&gt; int</code> (تعداد رانندگان ثبت‌شده در همین سامانه) الزامی‌اند. تعداد رانندگان از مجموعه رانندگان سیستم محاسبه شود؛ نگهداری اشیا در <code>dict</code> یا <code>list</code> آزاد است، اما ترتیب ثبت باید حفظ شود.</p>
+<h3>۴. قرارداد قطعی متدهای <code>DeliverySystem</code></h3>
+<p><strong>نام متد، ترتیب پارامتر و نوع خروجی را تغییر ندهید.</strong> تمام تست‌های متقابل بر اساس همین قرارداد نوشته می‌شوند.</p>
+<table>
+<thead>
+<tr>
+  <th>متد (امضای دقیق)</th>
+  <th>رفتار مورد انتظار</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>add_driver(self, username: str, position: tuple, service_category: str) -&gt; bool</code></td>
+  <td>ثبت موفق: <code>True</code>؛ نام تکراری: <code>False</code>، بدون تغییر <code>system.total_drivers</code></td>
+</tr>
+<tr>
+  <td><code>create_order(self, service_category: str, starting_position: tuple, finishing_position: tuple) -&gt; int \| None</code></td>
+  <td>ثبت موفق: شناسه از ۱ و پیوسته؛ مبدأ و مقصد برابر: <code>None</code>، بدون مصرف شناسه</td>
+</tr>
+<tr>
+  <td><code>assign_next_order(self, username: str) -&gt; int \| None</code></td>
+  <td>تخصیص نزدیک‌ترین سفارش <code>PENDING</code> با همان نوع وسیله: شناسه سفارش؛ نبود سفارش سازگار: <code>None</code></td>
+</tr>
+<tr>
+  <td><code>update_order_status(self, username: str, order_id: int, new_status: str) -&gt; bool</code></td>
+  <td>تغییر مجاز: <code>True</code>؛ وضعیت نامجاز یا سفارش متعلق به راننده دیگر: <code>False</code></td>
+</tr>
+<tr>
+  <td><code>get_driver(self, username: str) -&gt; tuple \| None</code></td>
+  <td><code>(status, position, credit)</code>؛ نام ناموجود: <code>None</code></td>
+</tr>
+<tr>
+  <td><code>get_order(self, order_id: int) -&gt; tuple \| None</code></td>
+  <td><code>(status, assigned_username, cost)</code>؛ نبود راننده: نام <code>None</code>؛ شناسه ناموجود: <code>None</code></td>
+</tr>
+<tr>
+  <td><code>get_order_list(self, status: str) -&gt; list[int]</code></td>
+  <td>فهرست شناسه‌ها با ترتیب ثبت، یا <code>[]</code></td>
+</tr>
+<tr>
+  <td><code>get_driver_list(self, status: str) -&gt; list[str]</code></td>
+  <td>فهرست نام‌ها با ترتیب ثبت، یا <code>[]</code></td>
+</tr>
+<tr>
+  <td><code>get_near_drivers(self, position: tuple, count: int) -&gt; list[str]</code></td>
+  <td>حداکثر <code>count</code> راننده آزاد به ترتیب نزدیکی؛ در تساوی، ثبت قدیمی‌تر</td>
+</tr>
+<tr>
+  <td><code>count_orders(self, position: tuple, distance: int, endpoint: str) -&gt; int</code></td>
+  <td>تعداد سفارش‌ها در فاصله <strong>کمتر یا مساوی</strong> <code>distance</code> از مبدأ (<code>START</code>) یا مقصد (<code>FINISH</code>)، مستقل از وضعیت</td>
+</tr>
+<tr>
+  <td><code>get_nearest_pending_order(self, position: tuple) -&gt; int \| None</code></td>
+  <td>شناسه نزدیک‌ترین سفارش <code>PENDING</code> بر اساس مبدأ؛ در تساوی، قدیمی‌تر؛ در نبود، <code>None</code></td>
+</tr>
+<tr>
+  <td><code>get_company_credit(self) -&gt; Decimal</code></td>
+  <td>اعتبار فعلی شرکت</td>
+</tr>
+</tbody>
+</table>
+<h3>۵. چرخه سفارش و پرداخت</h3>
+<ol>
+<li><code>create_order</code> یک سفارش <code>PENDING</code> با هزینه محاسبه‌شده ایجاد می‌کند.</li>
+<li><code>assign_next_order</code> تنها در صورت <code>FREE</code> بودن راننده، نزدیک‌ترین سفارش سازگار را برمی‌گزیند، سفارش را <code>ARRIVED</code> می‌کند، راننده را <code>BUSY</code> می‌کند، و ارتباط دوطرفه <code>Driver.current_order</code> و <code>Order.assigned_driver</code> را برقرار می‌کند. موقعیت و اعتبار تغییر نمی‌کنند.</li>
+<li><code>update_order_status(username, order_id, 'PICKUP')</code> تنها از وضعیت <code>ARRIVED</code> قابل اجراست؛ موقعیت راننده را به <code>starting_position</code> تغییر می‌دهد.</li>
+<li><code>update_order_status(username, order_id, 'DELIVERED')</code> تنها از وضعیت <code>PICKUP</code> مجاز است؛ موقعیت راننده را به <code>finishing_position</code> تغییر می‌دهد؛ ۸۰٪ مبلغ به راننده و ۲۰٪ به شرکت با <code>Decimal('0.8')</code> و <code>Decimal('0.2')</code> اضافه می‌کند؛ راننده <code>FREE</code> شده و <code>current_order</code> برابر <code>None</code> می‌شود. <code>assigned_driver</code> در سفارش برای سابقه باقی می‌ماند.</li>
+<li>تکرار تحویل، پرش مرحله و هر انتقال غیرمجاز نباید اطلاعات یا اعتبار را تغییر دهد.</li>
+</ol>
+<h3>۶. اعتبارسنجی و خطاها</h3>
+<ul>
+<li><strong>نوع نامعتبر</strong>: <code>TypeError</code>؛ <strong>مقدار نامعتبر</strong>: <code>ValueError</code>. مکان غیـر tuple = <code>TypeError</code>؛ طول نامعتبر مکان = <code>ValueError</code>؛ مختصات غیـر <code>int</code> (از جمله <code>bool</code>) = <code>TypeError</code>.</li>
+<li>دسته وسیله خارج از سه مقدار مجاز و نام کاربری با فرمت نامعتبر = <code>ValueError</code>؛ نوع نادرست آن‌ها = <code>TypeError</code>.</li>
+<li><code>order_id</code> باید <code>int</code> مثبت، <code>count</code> و <code>distance</code> باید <code>int</code> غیرمنفی باشند (<code>bool</code> مجاز نیست).</li>
+<li><code>endpoint</code> فقط <code>START</code> یا <code>FINISH</code>؛ مقادیر وضعیت باید متعلق به وضعیت‌های تعریف‌شده باشند.</li>
+<li>اگر راننده در <code>assign_next_order</code> مشغول باشد: <code>RuntimeError</code>.</li>
+<li>اگر نام راننده در <code>assign_next_order</code> یا <code>update_order_status</code> وجود نداشته باشد: <code>KeyError</code>.</li>
+<li>در شرایطی که برای یک متد صریحاً <code>False</code> یا <code>None</code> تعریف شده، همان خروجی برگردانده شود، نه Exception.</li>
+<li>هر عملیات ناموفق باید <strong>بدون تغییر حالت سامانه</strong> باشد. برای نام کاربری تکراری و مبدأ/مقصد یکسان پس از اعتبارسنجی ورودی، خروجی قراردادی اجرا می‌شود.</li>
+</ul>
+<h3>۷. اصول شی‌گرایی الزامی</h3>
+<ul>
+<li>مسئولیت‌های <code>Driver</code>، <code>Order</code> و <code>DeliverySystem</code> از هم جدا باشند؛ منطق کسب‌وکار در <code>main.py</code> قرار نگیرد.</li>
+<li>اطلاعات داخلی با پیشوند <code>_</code> ذخیره شوند؛ Propertyهای جدول فقط خواندنی باشند. مثلاً <code>driver.credit = Decimal('1000')</code> باید <code>AttributeError</code> ایجاد کند.</li>
+<li>به‌کارگیری <code>Class Attribute</code>، <code>@classmethod</code> و <code>@staticmethod</code> الزامی نیست. <code>total_drivers</code> و <code>company_credit</code> هر دو از طریق Property فقط‌خواندنی یک نمونه <code>DeliverySystem</code> ارائه می‌شوند؛ هر سامانه داده مستقل خود را دارد.</li>
+<li>کلاس‌ها باید بدون <code>input()</code>، <code>print()</code> یا راه‌اندازی رابط کاربری قابل import و تست باشند.</li>
+<li>تعریف کلاس‌های کمکی، متدهای کمکی و ساختار داخلی آزاد است؛ <strong>قرارداد عمومی فوق ثابت است</strong>.</li>
+</ul>
+<h3>۸. رابط متنی</h3>
+<p>فایل <code>main.py</code> دستورات مسئله اصلی کوئرا را پردازش کند:</p>
+<pre><code class="language-text">ADD-DRIVER
+CREATE-ORDER
+ASSIGN-NEXT-ORDER
+GET-DRIVER
+ORDER-UPDATE
+GET-ORDER
+GET-ORDER-LIST
+GET-DRIVER-LIST
+GET-NEAR-DRIVER
+GET-CNT-ORDER
+GET-NEAREST-PENDING-ORDER
+GET-COMPANY
+END
+</code></pre>
+<p>فرمت ورودی و خروجی متنی این دستورات بر اساس <a href="https://quera.org/problemset/106799">صورت کوئرا</a> است. اما نمره تست متقابل بر اساس API پایتونی بخش ۴ خواهد بود. جداکردن ورودی/خروجی از منطق سیستم الزامی است.</p>
+<h3>۹. Unit Testing و تست قرارداد مشترک</h3>
+<ul>
+<li>هر دانشجو دست‌کم <strong>۱۵ تست مستقل</strong> با <code>unittest</code> می‌نویسد؛ شامل مقداردهی، خطای ورودی، سفارش، هزینه، تخصیص، تساوی فاصله، چرخه وضعیت، پرداخت، Property و جست‌وجو.</li>
+<li>برای قابلیت خلاقانه نیز حداقل <strong>۳ تست</strong> جداگانه لازم است.</li>
+<li>فایل <code>test_contract.py</code> یک مجموعه تست پایه عمومی است؛ باید <strong>بدون تغییر</strong> در کنار سه فایل اصلی قرار گیرد و موفق اجرا شود.</li>
+<li>موفق شدن تست‌های عمومی به معنای کامل بودن پروژه نیست؛ دانشجو موظف است تست‌های مستقل بیشتری طراحی کند.</li>
+</ul>
+<pre><code class="language-bash">python -m unittest test_contract -v
+python -m unittest discover -s tests -v
+</code></pre>
+<h3>۱۰. Peer Testing — ارزیابی متقابل</h3>
+<p>هر دانشجو باید تست‌های مستقل خودش را روی پروژه <strong>حداقل دو دانشجوی دیگر</strong> که مدرس تعیین می‌کند اجرا کند.</p>
+<ul>
+<li>تست‌ها ابتدا روی پروژه خود دانشجو نوشته و در GitHub ثبت شوند؛ سپس پروژه‌های دیگر تخصیص داده می‌شوند.</li>
+<li>تغییر کد دیگران برای موفق شدن تست‌ها ممنوع است.</li>
+<li>هر شکست باید بررسی شود؛ ممکن است اشکال از تست باشد، نه از کد هم‌کلاسی.</li>
+<li>گزارش هر ارزیابی باید نام مخزن، اسم تست، رفتار مورد انتظار، نتیجه واقعی و تحلیل را داشته باشد.</li>
+<li>وجود نداشتن خطا نیز باید با گزارش تست‌های اجراشده مستند شود.</li>
+<li>ارزیابی این بخش بر اساس <strong>دقت تحلیل و کیفیت تست‌ها</strong> است، نه تعداد خطاهای اعلام‌شده.</li>
+</ul>
+<h3>۱۱. قابلیت خلاقانه الزامی</h3>
+<p>هر دانشجو حداقل <strong>یک قابلیت رفتاری جدید</strong> بر اساس ایده خودش طراحی کند؛ مانند لغو سفارش، انعام، امتیازدهی راننده، تخفیف یا گزارش عملکرد. قابلیت باید با طراحی شی‌گرا سازگار باشد، API اصلی را تغییر ندهد و در README مشخصات، ورودی‌ها، خروجی‌ها، محدودیت‌ها و دست‌کم سه تست آن مستند شود. صرفاً تغییر ظاهر یا پیام خروجی، قابلیت جدید محسوب نمی‌شود.</p>
+<h3>۱۲. دفاع شفاهی و آزمون عملی</h3>
+<p><strong>تحویل GitHub بدون دفاع حضوری کافی نیست.</strong> در جلسه دفاع (حدود ۱۰ تا ۱۵ دقیقه)، دانشجو باید معماری، Propertyها، تخصیص سفارش، تست‌ها، قابلیت خلاقانه و گزارش Peer Testing را توضیح دهد. مدرس ممکن است یک باگ معرفی کند یا از دانشجو بخواهد تغییر کوچکی در کد خود بدهد و تست مناسبی برای آن بنویسد. آزمون عملی بدون کمک دیگران و بدون ابزار هوش مصنوعی انجام می‌شود.</p>
+<p>استفاده از AI در توسعه پروژه مجاز است؛ دانشجو باید در README به استفاده‌های مهم اشاره کند و مسئول توضیح و اصلاح کد باشد.</p>
+<h3>۱۳. ساختار فایل‌ها و تحویل</h3>
+<pre><code class="language-text">snapbox/
+    driver.py
+    order.py
+    delivery_system.py
+    main.py
+    test_contract.py
+    tests/
+        __init__.py
+        test_driver.py
+        test_order.py
+        test_delivery_system.py
+        test_extension.py
+    peer_review/
+        review_1.md
+        review_2.md
+    README.md
+</code></pre>
+<p>تمام کدها باید در یک مخزن GitHub قابل دسترسی برای مدرس ثبت شوند. آخرین Commit پیش از مهلت تعیین‌شده، نسخه تحویل است. README شامل راهنمای اجرا، معماری، دستور اجرای تست، توضیح قابلیت جدید و اشاره به استفاده از AI باشد.</p>
+<h3>۱۴. بارم‌بندی</h3>
+<table>
+<thead>
+<tr>
+  <th>بخش</th>
+  <th style="text-align:right">نمره</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>عملکردهای پایه سامانه</td>
+  <td style="text-align:right">۲۵</td>
+</tr>
+<tr>
+  <td>OOP، Encapsulation و Property</td>
+  <td style="text-align:right">۱۵</td>
+</tr>
+<tr>
+  <td>Unit Testهای دانشجو</td>
+  <td style="text-align:right">۱۵</td>
+</tr>
+<tr>
+  <td>Peer Testing و گزارش‌ها</td>
+  <td style="text-align:right">۱۰</td>
+</tr>
+<tr>
+  <td>قابلیت خلاقانه و تست‌های آن</td>
+  <td style="text-align:right">۱۰</td>
+</tr>
+<tr>
+  <td>دفاع شفاهی و تغییر عملی کد</td>
+  <td style="text-align:right">۲۰</td>
+</tr>
+<tr>
+  <td>GitHub و مستندات</td>
+  <td style="text-align:right">۵</td>
+</tr>
+<tr>
+  <td><strong>جمع</strong></td>
+  <td style="text-align:right"><strong>۱۰۰</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>یادآوری:</strong> رعایت امضا و رفتار متدهای عمومی برای آزمون خودکار و اجرای تست‌های هم‌کلاسی‌ها الزامی است.</p>
+</main></body></html>
