@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تمرین شی‌گرایی — کتابخانه محاسبات عددی و ماتریسی</title><style>
+@page {size:A4; margin:17mm}
+*{box-sizing:border-box} body{margin:0;background:#f3f5f8;color:#1c2935;font-family:Tahoma,"Vazirmatn",Arial,sans-serif;direction:rtl;line-height:1.9;font-size:14px}
+main{max-width:940px;margin:32px auto;background:#fff;border-radius:18px;box-shadow:0 12px 35px #1a315312;padding:42px 48px}
+h1{font-size:29px;line-height:1.55;margin:10px 0 12px} h2{font-size:21px;color:#153b62;margin:0 0 12px} h3{font-size:16px;color:#184c73;margin:22px 0 7px} p{margin:8px 0 13px} section{margin-top:32px} .hero{background:linear-gradient(115deg,#153758,#245d76);color:#fff;padding:30px;border-radius:14px} .hero p{color:#e0f2fb} .eyebrow{direction:ltr;text-align:left;letter-spacing:2px;font-size:10px;opacity:.85} .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.chips span{background:#ffffff24;border:1px solid #ffffff50;border-radius:18px;padding:2px 10px;font-size:11px;line-height:2}
+code{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Consolas,"DejaVu Sans Mono",monospace;font-size:.94em;background:#edf3f7;color:#104767;padding:0 4px;border-radius:4px} pre{background:#10283c;border-radius:10px;padding:20px;overflow-x:auto;direction:ltr;text-align:left;line-height:1.6;font-size:12px}pre code{color:#e8f3fa;background:transparent;padding:0;display:block;white-space:pre}table{width:100%;border-collapse:collapse;margin:12px 0 17px;table-layout:auto;font-size:12px}th{background:#eaf1f7;color:#24465e;font-weight:bold} td,th{border:1px solid #d9e2e9;padding:9px 11px;text-align:right;vertical-align:top}tr:nth-child(even){background:#fafcfe}ul{padding-right:23px}li{margin-bottom:7px}.phase{border-top:2px solid #e3ebf2;padding-top:26px}.phase-head{display:flex;align-items:center;gap:16px}.phase-head span{background:#dceff1;color:#095866;border-radius:7px;padding:3px 14px;white-space:nowrap;font-weight:700}.phase-head h2{margin:0}.checkpoint{background:#eef8f6;border-right:4px solid #1c8a7c;padding:13px 16px;border-radius:4px;margin-top:20px}.note{background:#fff6df;border-right:3px solid #d9a73c;padding:10px 15px;font-size:12px}.total{font-weight:bold;background:#eaf1f7!important}.tree{margin:23px auto;max-width:550px;text-align:center}.node{border:1px solid #98bbc8;background:#f4f9fa;border-radius:10px;padding:13px 8px}.node small{display:block;font-size:11px;color:#53717d}.node code{background:transparent}.node.parent{max-width:260px;margin:auto;position:relative}.node.parent:after{content:"";position:absolute;top:100%;left:50%;height:23px;border-left:2px solid #98bbc8}.branches{padding-top:23px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative}.branches:before{content:"";position:absolute;top:11px;right:16.6%;left:16.6%;border-top:2px solid #98bbc8}.branches .node{position:relative}.branches .node:before{content:"";position:absolute;bottom:100%;left:50%;height:12px;border-left:2px solid #98bbc8}
+@media(max-width:700px){main{margin:0;border-radius:0;padding:20px 15px}.hero{padding:23px 17px}h1{font-size:23px}h2{font-size:18px}td,th{padding:6px 5px;font-size:11px}pre{font-size:10px}}@media print{body{background:#fff}main{box-shadow:none;padding:0;margin:0;max-width:none}.hero{print-color-adjust:exact}.phase,table,pre,.checkpoint{break-inside:avoid}section{break-inside:auto}}
+</style></head><body><main>
+<header class="hero">
+  <div class="eyebrow">ADVANCED PYTHON · OBJECT-ORIENTED PROGRAMMING</div>
+  <h1>تمرین شی‌گرایی: کتابخانه محاسبات عددی و ماتریسی</h1>
+  <p>پیاده‌سازی اعداد صحیح، اعداد مختلط و ماتریس‌ها با استفاده از وراثت، کلاس انتزاعی، متد ایستا، متد کلاسی و سربارگذاری عملگرها</p>
+  <div class="chips"><span>۳ بخش</span><span>Python 3</span><span>ABC &amp; Inheritance</span><span>Operator Overloading</span><span>بدون ورودی/خروجی استاندارد</span></div>
+</header>
+<section>
+<h2>هدف تمرین و ساختار کلی</h2>
+<p>قرار است کتابخانه‌ای بسازید که بتواند سه نوع شیء <code>Integer</code>، <code>Complex</code> و <code>Matrix</code> را بسازد و عملیات جمع، ضرب و تفریق را روی آن‌ها انجام دهد. هدف فقط رسیدن به جواب عددی نیست؛ طراحی رابطه بین کلاس‌ها و نحوه استفاده از چندریختی نیز ارزیابی می‌شود.</p>
+<div class="tree"><div class="node parent"><code>AlgebraicElement(ABC)</code><small>قرارداد مشترک عملیات</small></div><div class="branches"><div class="node"><code>Integer</code></div><div class="node"><code>Complex</code></div><div class="node"><code>Matrix</code></div></div></div>
+<p><strong>نکته طراحی:</strong> در این تمرین هر سه کلاس می‌توانند جمع، ضرب و قرینه داشته باشند؛ بنابراین ارث‌بری از کلاس انتزاعی <code>AlgebraicElement</code> معنادار است. با این حال، <code>Matrix</code> «نوعی عدد صحیح یا مختلط» نیست و نباید از <code>Integer</code> یا <code>Complex</code> ارث ببرد.</p>
+</section>
+<section>
+<h2>قرارداد عمومی و قواعد مشترک</h2>
+<ul>
+<li>فایل‌های اجباری: <code>algebra.py</code> (شامل هر چهار کلاس) و <code>test_algebra.py</code> (تست‌های خودتان). می‌توانید فایل‌های کمکی بیشتری داشته باشید.</li>
+<li>تمام متدهای معرفی‌شده در این صورت سؤال باید دقیقاً با نام و امضای خواسته‌شده پیاده‌سازی شوند. پارامتر <code>self</code> یا <code>cls</code> نیز مطابق نوع متد رعایت شود.</li>
+<li>فیلدهای داخلی را با <code>__</code> نگهداری کنید و ویژگی‌های عمومی اعلام‌شده را با <code>@property</code> فقط‌خواندنی ارائه دهید. نبودن Setter به‌تنهایی نباید موجب افشای لیست قابل‌تغییر داخلی شود.</li>
+<li>برای اعداد صحیح پایتونی درون محاسبات مجازید از <code>int</code> استفاده کنید، اما <strong>خروجی عملیات عددی و اعضای ماتریس باید شیء <code>Integer</code> یا <code>Complex</code> باشد</strong>، نه <code>int</code> خام.</li>
+<li>برای ورودی با <em>نوع نامعتبر</em>، <code>TypeError</code> و برای <em>مقدار یا ابعاد نامعتبر</em>، <code>ValueError</code> ایجاد کنید؛ استثناهای اختصاصی هر متد در پایین مشخص شده‌اند.</li>
+<li>تابع <code>multiply(a, b)</code> مستقل از کلاس‌ها تعریف می‌شود و باید از <strong>Duck Typing</strong> استفاده کند.</li>
+</ul>
+</section>
+<section class="phase">
+<div class="phase-head"><span>بخش ۱</span><h2>کلاس انتزاعی، وراثت و انواع عددی</h2></div>
+<h3>۱ـ۱. کلاس <code>AlgebraicElement</code></h3>
+<p>با استفاده از <code>ABC</code> و <code>@abstractmethod</code> این کلاس را پیاده کنید. ساخت مستقیم نمونه از آن مجاز نیست.</p>
+<table><thead><tr><th>عضو</th><th>نوع</th><th>رفتار</th></tr></thead><tbody>
+<tr><td><code>__add__(self, other)</code></td><td>abstract</td><td>جمع دو شیء</td></tr>
+<tr><td><code>__mul__(self, other)</code></td><td>abstract</td><td>ضرب دو شیء</td></tr>
+<tr><td><code>__neg__(self)</code></td><td>abstract</td><td>ساخت قرینه جمعی</td></tr>
+<tr><td><code>__sub__(self, other)</code></td><td>concrete</td><td>فقط در کلاس پایه پیاده شود: <code>self + (-other)</code></td></tr>
+</tbody></table>
+<p>زیرکلاس‌ها نباید <code>__sub__</code> را بازنویسی کنند؛ این بخش برای سنجش <strong>استفاده مجدد از کد به کمک وراثت</strong> است.</p>
+<h3>۱ـ۲. کلاس <code>Integer(AlgebraicElement)</code></h3>
+<table><thead><tr><th>عضو</th><th>رفتار</th></tr></thead><tbody>
+<tr><td><code>__init__(self, value: int)</code></td><td>فقط <code>int</code> واقعی قبول شود؛ <code>bool</code> مجاز نیست.</td></tr>
+<tr><td><code>value</code></td><td>Property فقط‌خواندنی از نوع <code>int</code></td></tr>
+<tr><td><code>from_string(cls, text: str)</code></td><td><code>@classmethod</code>؛ نمونه‌سازی از رشته‌هایی مثل <code>"-12"</code> یا <code>"+7"</code></td></tr>
+<tr><td><code>__add__</code>، <code>__mul__</code>، <code>__neg__</code></td><td>پیاده‌سازی قرارداد کلاس پایه</td></tr>
+<tr><td><code>__eq__(self, other)</code></td><td>بررسی برابری عددی با <code>Integer</code> یا <code>Complex</code></td></tr>
+</tbody></table>
+<h3>۱ـ۳. کلاس <code>Complex(AlgebraicElement)</code></h3>
+<table><thead><tr><th>عضو</th><th>رفتار</th></tr></thead><tbody>
+<tr><td><code>__init__(self, real: int, imag: int)</code></td><td>هر دو مؤلفه باید <code>int</code> واقعی باشند؛ <code>bool</code> مجاز نیست.</td></tr>
+<tr><td><code>real</code>، <code>imag</code></td><td>Propertyهای فقط‌خواندنی</td></tr>
+<tr><td><code>from_string(cls, text: str)</code></td><td><code>@classmethod</code>؛ نمونه‌سازی از <code>"5+2i"</code> یا <code>"-3-4i"</code></td></tr>
+<tr><td><code>__add__</code>، <code>__mul__</code>، <code>__neg__</code></td><td>پیاده‌سازی قرارداد کلاس پایه</td></tr>
+<tr><td><code>__eq__(self, other)</code></td><td>بررسی برابری عددی با <code>Integer</code> یا <code>Complex</code></td></tr>
+</tbody></table>
+<p>فرمت رشته مختلط دقیقاً <code>a+bi</code> یا <code>a-bi</code> است که در آن <code>a</code> و <code>b</code> اعداد صحیح دارای علامت اختیاری‌اند؛ مثلاً <code>"0-2i"</code> معتبر و <code>"2i"</code> در این تمرین نامعتبر است.</p>
+<h3>قوانین عملگرها در بخش ۱</h3>
+<ul>
+<li><code>Integer + Integer</code> و <code>Integer * Integer</code> باید <code>Integer</code> جدید برگردانند.</li>
+<li>در عملیات ترکیبی <code>Integer</code> و <code>Complex</code>، خروجی باید <code>Complex</code> باشد، حتی اگر بخش موهومی صفر باشد.</li>
+<li>برای <code>Complex(a,b) * Complex(c,d)</code> از رابطه <code>(ac − bd) + (ad + bc)i</code> استفاده کنید.</li>
+<li><code>Integer(3) == Complex(3,0)</code> باید <code>True</code> باشد.</li>
+<li>عملگرهای <code>+</code> و <code>*</code> روی دو عدد و نیز <code>__neg__</code> شیء جدید ایجاد کنند و عملوندها را تغییر ندهند.</li>
+</ul>
+<div class="checkpoint"><strong>خروجی مورد انتظار بخش ۱:</strong> کلاس انتزاعی و دو زیرکلاس عددی، دو متد کلاسی تبدیل رشته، و تست‌های عملیات عددی و وراثت.</div>
+</section>
+<section class="phase">
+<div class="phase-head"><span>بخش ۲</span><h2>کلاس ماتریس و متدهای ایستا / کلاسی</h2></div>
+<p><code>Matrix</code> نیز از <code>AlgebraicElement</code> ارث‌بری می‌کند. خانه‌های آن فقط از نوع <code>Integer</code> یا <code>Complex</code> هستند و می‌توانند ترکیبی باشند.</p>
+<h3>۲ـ۱. سازنده و Propertyها</h3>
+<table><thead><tr><th>عضو</th><th>رفتار</th></tr></thead><tbody>
+<tr><td><code>__init__(self, rows: int, cols: int, elements: list)</code></td><td><code>rows</code> و <code>cols</code> اعداد صحیح مثبت؛ طول <code>elements</code> دقیقاً <code>rows * cols</code>؛ عناصر فقط <code>Integer</code> یا <code>Complex</code></td></tr>
+<tr><td><code>rows</code>، <code>cols</code></td><td>Property فقط‌خواندنی</td></tr>
+<tr><td><code>elements</code></td><td>Property فقط‌خواندنی که <code>tuple</code> برمی‌گرداند، نه فهرست داخلی قابل‌تغییر</td></tr>
+<tr><td><code>__eq__(self, other)</code></td><td>برابری ابعاد و اعضای متناظر</td></tr>
+<tr><td><code>__add__</code>، <code>__mul__</code>، <code>__neg__</code></td><td>عملگرهای ماتریسی؛ جزئیات در بخش ۳</td></tr>
+</tbody></table>
+<p>اعضا به ترتیب <strong>سطر به سطر</strong> ذخیره می‌شوند. مثلاً ماتریس ۲×۳ با <code>[1,2,3,4,5,6]</code> به شکل <code>[[1,2,3],[4,5,6]]</code> است؛ البته عناصر واقعی باید شیء <code>Integer</code> باشند.</p>
+<h3>۲ـ۲. متدهای ایستا <code>@staticmethod</code></h3>
+<table><thead><tr><th>امضای دقیق</th><th>خروجی / شرط</th></tr></thead><tbody>
+<tr><td><code>Matrix.make_unit_matrix(n)</code></td><td>ماتریس همانی <code>n × n</code> با اعضای <code>Integer</code>؛ <code>n</code> مثبت</td></tr>
+<tr><td><code>Matrix.get_ith_row(matrix, i)</code></td><td>لیست اعضای سطر با اندیس صفرمبنا؛ اندیس نامعتبر: <code>IndexError</code></td></tr>
+<tr><td><code>Matrix.get_ith_col(matrix, j)</code></td><td>لیست اعضای ستون با اندیس صفرمبنا؛ اندیس نامعتبر: <code>IndexError</code></td></tr>
+<tr><td><code>Matrix.is_zero_matrix(matrix)</code></td><td>بولین؛ تمام اعضا صفر باشند، شامل <code>Complex(0,0)</code></td></tr>
+<tr><td><code>Matrix.is_unit_matrix(matrix)</code></td><td>بولین؛ فقط برای ماتریس مربعی؛ قطر اصلی یک و باقی خانه‌ها صفر</td></tr>
+<tr><td><code>Matrix.is_top_triangular_matrix(matrix)</code></td><td>بولین؛ فقط مربعی و همه عناصر <strong>زیر</strong> قطر اصلی صفر</td></tr>
+<tr><td><code>Matrix.is_bottom_triangular_matrix(matrix)</code></td><td>بولین؛ فقط مربعی و همه عناصر <strong>بالای</strong> قطر اصلی صفر</td></tr>
+</tbody></table>
+<p>در همه این متدها، آرگومان <code>matrix</code> باید نمونه <code>Matrix</code> باشد؛ در غیر این صورت <code>TypeError</code>. برای بررسی ویژگی‌های همانی و مثلثی، ماتریس نامربعی <code>False</code> برمی‌گرداند. ماتریس صفر مربعی هم بالامثلثی و هم پایین‌مثلثی محسوب می‌شود.</p>
+<h3>۲ـ۳. متد کلاسی <code>@classmethod</code></h3>
+<table><thead><tr><th>امضای دقیق</th><th>رفتار</th></tr></thead><tbody><tr><td><code>Matrix.make_matrix_from_string(cls, elements: str)</code></td><td>تبدیل رشته به نمونه ماتریس؛ هر سطر با <code>;</code> و هر عضو با فاصله جدا می‌شود.</td></tr></tbody></table>
+<p>برای مثال رشته <code>"1 2 3; 4 5+2i 6"</code> یک ماتریس ۲×۳ می‌سازد. برای ساخت اعضا باید از <code>Integer.from_string</code> و <code>Complex.from_string</code> استفاده کنید؛ استفاده از <code>eval</code> ممنوع است. سطرهای نامساوی یا رشته خالی: <code>ValueError</code>.</p>
+<div class="checkpoint"><strong>خروجی مورد انتظار بخش ۲:</strong> ساخت و نمایش ایمن ماتریس، تمام Static Methodها، Class Method تبدیل رشته و تست‌های مستقل مربوط به ماتریس.</div>
+</section>
+<section class="phase">
+<div class="phase-head"><span>بخش ۳</span><h2>سربارگذاری عملگرها، چندریختی و Duck Typing</h2></div>
+<h3>۳ـ۱. عملگر جمع <code>+</code></h3>
+<ul><li>جمع <code>Matrix + Matrix</code> فقط با ابعاد برابر مجاز است؛ در غیر این صورت <code>ValueError</code>.</li><li>جمع ماتریس با <code>Integer</code> یا <code>Complex</code> یعنی افزودن عدد به تک‌تک خانه‌ها.</li><li>جمع عدد با ماتریس در <strong>هر دو ترتیب</strong> باید یکسان کار کند: <code>matrix + scalar</code> و <code>scalar + matrix</code>.</li></ul>
+<h3>۳ـ۲. عملگر ضرب <code>*</code></h3>
+<ul><li>ضرب دو ماتریس با ابعاد <code>(r × k)</code> و <code>(k × c)</code> تعریف می‌شود؛ در غیر این صورت <code>ValueError</code>.</li><li>ضرب ماتریس در عدد، تک‌تک خانه‌ها را ضرب می‌کند. هر دو ترتیب <code>matrix * scalar</code> و <code>scalar * matrix</code> باید پشتیبانی شوند.</li><li>در ضرب ماتریسی از <code>get_ith_row</code> و <code>get_ith_col</code> استفاده کنید.</li><li>ترتیب ضرب دو ماتریس را جابه‌جا نکنید؛ ضرب ماتریسی لزوماً جابه‌جایی‌پذیر نیست.</li></ul>
+<h3>۳ـ۳. قرینه و تفریق</h3>
+<p>در هر زیرکلاس، <code>__neg__</code> را تکمیل کنید. متد <code>__sub__</code> باید از کلاس پایه به ارث برسد. بنابراین <code>matrix1 - matrix2</code>، <code>matrix - scalar</code>، <code>scalar - matrix</code> و تفریق انواع عددی باید کار کنند.</p>
+<h3>۳ـ۴. خطاهای عملگرها</h3>
+<p>برای عملوندی غیر از <code>Integer</code>، <code>Complex</code> یا <code>Matrix</code> (مثلاً <code>"3"</code> یا <code>3.0</code>) در <code>+</code>، <code>*</code> و <code>-</code>، <code>TypeError</code> ایجاد کنید. عملگرها نباید اشیای اولیه را تغییر دهند.</p>
+<h3>۳ـ۵. تابع مستقل <code>multiply(a, b)</code></h3>
+<p>این تابع <strong>خارج از کلاس‌ها</strong> قرار می‌گیرد و فقط عبارت <code>a * b</code> را محاسبه و برمی‌گرداند؛ نباید با <code>isinstance</code> نوع ورودی را محدود کند. به این ترتیب با هر شیئی که عملگر ضرب معتبر دارد نیز کار می‌کند.</p>
+<div class="checkpoint"><strong>خروجی مورد انتظار بخش ۳:</strong> اجرای همه ترکیب‌های عملگرها، ارث‌بری متد تفریق، تابع <code>multiply</code> و تست خطاها و چندریختی.</div>
+</section>
+<section>
+<h2>نمونه‌های قابل اجرا برای درک قرارداد</h2>
+<p>این مثال‌ها بخشی از قرارداد هستند و باید بدون نیاز به تغییر اجرا شوند:</p>
+<pre><code>from algebra import AlgebraicElement, Integer, Complex, Matrix, multiply
+
+x = Integer(3)
+y = Complex(2, 1)
+assert isinstance(x, AlgebraicElement)
+assert isinstance(y, AlgebraicElement)
+assert (x + y) == Complex(5, 1)
+assert (x * y) == Complex(6, 3)
+assert (Integer(8) - Integer(5)) == Integer(3)
+assert Integer.from_string("-12") == Integer(-12)
+assert Complex.from_string("5+2i") == Complex(5, 2)
+
+m = Matrix.make_matrix_from_string("1 2; 3 4")
+n = Matrix.make_matrix_from_string("2 0; 1 2")
+assert Matrix.get_ith_row(m, 1) == [Integer(3), Integer(4)]
+assert Matrix.get_ith_col(m, 0) == [Integer(1), Integer(3)]
+assert (m * n) == Matrix.make_matrix_from_string("4 4; 10 8")
+assert (Integer(2) + m) == (m + Integer(2))
+assert multiply(m, Integer(2)) == m * Integer(2)
+assert Matrix.is_unit_matrix(Matrix.make_unit_matrix(3))
+assert not Matrix.is_unit_matrix(m)
+
+# The abstract base class must not be instantiated:
+# AlgebraicElement()  -&gt; TypeError</code></pre>
+</section>
+<section>
+<h2>تحویل و ارزیابی</h2>
+<ul>
+<li>فایل <code>algebra.py</code> با تمام کلاس‌ها و تابع <code>multiply</code>.</li>
+<li>فایل <code>test_algebra.py</code> با حداقل <strong>۱۵ تست مستقل</strong> مبتنی بر <code>unittest</code>؛ حداقل ۴ تست برای بخش ۱، ۵ تست برای بخش ۲، ۶ تست برای بخش ۳.</li>
+<li>یک فایل <code>README.md</code> شامل ساختار وراثت، تفاوت <code>@staticmethod</code> و <code>@classmethod</code> در این تمرین و توضیح اینکه چرا <code>__sub__</code> فقط در کلاس پایه نوشته شده است.</li>
+<li>در ارزیابی کلاسی، دانشجو باید بتواند تصمیم‌های طراحی، برخورد با خطاها و یک تغییر کوچک در کد را بدون کمک ابزار هوش مصنوعی توضیح دهد و اجرا کند.</li>
+</ul>
+<table class="grading"><thead><tr><th>معیار</th><th>نمره</th></tr></thead><tbody>
+<tr><td>کلاس انتزاعی، وراثت و کپسوله‌سازی</td><td>۲۰</td></tr>
+<tr><td>Integer / Complex و سازنده‌های رشته‌ای</td><td>۱۵</td></tr>
+<tr><td>Matrix، متدهای ایستا و کلاسی</td><td>۲۰</td></tr>
+<tr><td>عملگرها و چندریختی</td><td>۲۵</td></tr>
+<tr><td>تست‌های مستقل و پوشش خطاها</td><td>۱۵</td></tr>
+<tr><td>مستندسازی و خوانایی</td><td>۵</td></tr>
+<tr class="total"><td>مجموع</td><td>۱۰۰</td></tr></tbody></table>
+
+</section>
+</main></body></html>
